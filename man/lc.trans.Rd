@@ -9,18 +9,17 @@ lc.trans(y, C)
 \arguments{
 \item{y}{A data frame or numeric matrix.}
 
-\item{C}{Matrix of weights.}
+\item{C}{A dataframe containg the weights.}
 }
 \value{
-A data frame of the linear combinations:
-\item{LRT.Layers}{A data frame with the Lilkelihood Ratio Test Statistic for each layer of the tree.}
-\item{Overall}{The overall Lilkelihood Ratio Test Statistics and p-value.}
+A data frame of the linear combinations specified in C.
 }
 \description{
 Performs linear combinations using a data matrix y.
 }
 \details{
-Generates a new data matrix that are linear combinations of the data matrix y.
+Generates a new data matrix that are linear combinations of the data matrix y. The weights for the linear combinations
+are provided as columns in C. The variables names within C will be used as the new variables of the return matrix.
 }
 \examples{
 y<-data.frame(Y1=rnorm(10),Y2=rnorm(10),Y3=rnorm(10))

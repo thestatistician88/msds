@@ -12,6 +12,7 @@ RoxygenNote: 7.3.3
 Depends: 
     R (>= 3.5)
 Imports:
-    Rdpack
+    Rdpack,
+    stats
 RdMacros: Rdpack
 LazyData: true

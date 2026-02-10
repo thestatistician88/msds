@@ -36,4 +36,91 @@ lc.trans<-function(y,C){
 
 
 #####################################################################################################
+#' Scree Plots Derived From PCA
+#'
+#' Produces scree plots from user provided eigenvalues or an object created by [stats::princomp] or [stats:prcomp].
+#'
+#' @param x An object containing a `sdev` component, such as that returned by [stats::princomp] or [stats:prcomp] .
+#' @param eig.vals Vector of eigenvalues from a PCA decomposition.  Alternative to `x`.
+#' @param ref Horizontal reference line for the cumulative proportion plot.
+#' @param label.size Text size for x and y axis labels.
+#'
+#'
+#' @returns A 1x3 panel of scree plots using the eigenvalues, proportion of variance explained, and cumulative proportion of variance explained.
+#'
+#' @details The user may specify eigenvalues for plotting rather than an object created by one of the common PCA functions. User should specify `x=NULL` when
+#' using the alternative option.
+#' @export
+#' @examples
+#'faculty.pca<-prcomp(economics_reduced)
+#'pca.scree(facult.pca,ref=.9,label.size=14)
+#'
+#'
+#'
+#'
+pca.scree <- function(x, eig.vals = NULL, ref = 0.8, label.size = 11) {
+  # Load required package
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("Package 'ggplot2' is required but not installed.")
+  }
+  if (!requireNamespace("gridExtra", quietly = TRUE)) {
+    stop("Package 'gridExtra' is required but not installed.")
+  }
 
+  # Check inputs
+  if (all(names(x) != "sdev") & is.null(eig.vals)) {
+    return(cat("x does not contain an sdev variable (sqrt(eigenvalues))"))
+  }
+  if (any(names(x) == "sdev")) {
+    eig.vals <- (x$sdev)^2
+  }
+
+  # Prepare data
+  n_components <- length(eig.vals)
+  prop_var <- eig.vals / sum(eig.vals)
+  cumulative_prop <- cumsum(prop_var)
+
+  plot_data <- data.frame(
+    PC = 1:n_components,
+    EigenValues = eig.vals,
+    PropVariance = prop_var,
+    CumulativeProp = cumulative_prop
+  )
+
+  # Plot 1: Eigenvalues
+  p1 <- ggplot2::ggplot(plot_data, ggplot2::aes(x = PC, y = EigenValues)) +
+    ggplot2::geom_point(size = 4, shape = 18) +
+    ggplot2::geom_line(linewidth = 0.75) +
+    ggplot2::labs(x = "Principal Comp.", y = "Eigen Values") +
+    ggplot2::theme_classic() +
+    ggplot2::theme(
+      axis.title = ggplot2::element_text(size = label.size),
+      axis.text = ggplot2::element_text(size = label.size * 0.9)
+    )
+
+  # Plot 2: Proportion of variance
+  p2 <- ggplot2::ggplot(plot_data, ggplot2::aes(x = PC, y = PropVariance)) +
+    ggplot2::geom_point(size = 4, shape = 18) +
+    ggplot2::geom_line(linewidth = 0.75) +
+    ggplot2::labs(x = "Principal Comp.", y = "Prop. of Total Variance") +
+    ggplot2::theme_classic() +
+    ggplot2::theme(
+      axis.title = ggplot2::element_text(size = label.size),
+      axis.text = ggplot2::element_text(size = label.size * 0.9)
+    )
+
+  # Plot 3: Cumulative proportion with reference line
+  p3 <- ggplot2::ggplot(plot_data, ggplot2::aes(x = PC, y = CumulativeProp)) +
+    ggplot2::geom_hline(yintercept = ref, linetype = "dashed", linewidth = 0.75) +
+    ggplot2::geom_point(size = 4, shape = 18) +
+    ggplot2::geom_line(linewidth = 0.75) +
+    ggplot2::labs(x = "Principal Comp.", y = "Cumul. Prop.") +
+    ggplot2::theme_classic() +
+    ggplot2::theme(
+      axis.title = ggplot2::element_text(size = label.size),
+      axis.text = ggplot2::element_text(size = label.size * 0.9)
+    )
+
+  # Combine plots
+  gridExtra::grid.arrange(p1, p2, p3, ncol = 3)
+}

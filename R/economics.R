@@ -26,6 +26,6 @@
 #' indicators (D1-D6) to evaluate the performance of 55 Italian Economics
 #' faculties in the 2009/2010 academic year in \insertCite{ICR}{msds}.
 #'
-#' @source \insertRef{ICR}{msds}
+#' @source \insertRef{ICR}{msds} \insertRef{economics_data}{MSDS}
 #' \url{https://search.r-project.org/CRAN/refmans/datasetsICR/html/Economics.html}
 "economics"

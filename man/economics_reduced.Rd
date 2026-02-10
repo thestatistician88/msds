@@ -17,7 +17,7 @@ A data frame with 55 observations on the following 14 variables:
 }
 }
 \source{
-\insertRef{ICR}{msds}
+\insertRef{ICR}{msds} \insertRef{economics_data}{MSDS}
 \url{https://search.r-project.org/CRAN/refmans/datasetsICR/html/Economics.html}
 }
 \usage{

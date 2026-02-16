@@ -124,3 +124,165 @@ pca.scree <- function(x, eig.vals = NULL, ref = 0.8, label.size = 11) {
   # Combine plots
   gridExtra::grid.arrange(p1, p2, p3, ncol = 3)
 }
+
+
+#' Visualize Principal Axes
+#'
+#' This function plots the two dimensional data matrix `x` along with an estimate of the principal axes obtained via
+#' spectral decomposition of the data's covariance matrix.
+#'
+#'
+#' @param data A data frame with exactly two numeric columns (x and y)
+#' @param axis_label_size Numeric value controlling the font size of axis labels (default = 12)
+#' @param point_size Numeric value controlling the size of data points (default = 3)
+#' @param main Character string for the title (default is empty)
+#' @param xlab Character string for the x axis variable (default is variable name)
+#' @param ylab Character string for the y axis variable (default is variable)
+#' @param arrow_scale Numeric value controlling the length of PC arrows.
+#'   If NULL (default), arrows are scaled by 2.5 times the square root of the eigenvalues of the sample covariance amtrix.
+#'   If numeric, uses the same scale factor for both PC arrows.
+#'
+#' @return A list containing:
+#'   \item{plot}{ggplot2 object of the visualization}
+#'   \item{pca_result}{prcomp object with PCA results}
+#'   \item{variance_explained}{Vector of variance explained when converting the data to principal components.}
+#'
+#' @examples
+#' # Create sample data
+#' set.seed(123)
+#' sample_data <- data.frame(x = rnorm(50, 5, 2), y = rnorm(50, 10, 5))
+#' sample_data$y <- sample_data$x + rnorm(50, 0, 1)
+#'
+#' # Run PCA visualization with automatic arrow scaling
+#' result <- plot.praxes(sample_data, axis_label_size = 14)
+#' print(result$plot)
+#'
+#' # Run with custom arrow scale
+#' result <- plot.praxes(sample_data, arrow_scale = 5)
+#' print(result$plot)
+#'
+#' @export
+plot_praxes <- function(data,
+                              axis_label_size = 12,
+                              point_size = 3,
+                              main="",
+                              xlab=NULL,
+                              ylab=NULL,
+                              arrow_scale = NULL
+                              ) {
+
+  # Load required library
+  if (!require("ggplot2")) {
+    stop("ggplot2 package is required. Please install it using: install.packages('ggplot2')")
+  }
+
+  # Input validation
+  if (!is.data.frame(data)) {
+    data=data.frame(data)
+  }
+
+  if (ncol(data) != 2) {
+    stop("Data frame must have exactly 2 columns")
+  }
+
+  if (!all(sapply(data, is.numeric))) {
+    stop("All columns must be numeric")
+  }
+
+  if (axis_label_size <= 0) {
+    stop("axis_label_size must be positive")
+  }
+
+  if (!is.null(arrow_scale) && arrow_scale <= 0) {
+    stop("arrow_scale must be positive or NULL")
+  }
+  #Hardcoding PCA on Covariance Matrix.  User should standardize data to view principal axes when using
+  #correlation matrix.
+  center_data = TRUE
+  scale_data = FALSE
+  # Perform PCA
+  pca_result <- prcomp(data, center = center_data, scale. = scale_data)
+
+  # Calculate center of data
+  center <- colMeans(data)
+
+  # Extract rotation matrix (eigenvectors)
+  rotation <- pca_result$rotation
+
+  # Calculate variance explained
+  variance_explained <- (pca_result$sdev^2 / sum(pca_result$sdev^2)) * 100
+
+  # Determine arrow scales for each PC
+  if (is.null(arrow_scale)) {
+    pc1_scale <- 2.5 * pca_result$sdev[1]
+    pc2_scale <- 2.5 * pca_result$sdev[2]
+  } else {
+    pc1_scale <- arrow_scale
+    pc2_scale <- arrow_scale
+  }
+
+  # Create arrow endpoints for PC1 and PC2
+  pc1_arrow <- data.frame(
+    x = center[1],
+    y = center[2],
+    xend = center[1] + rotation[1, 1] * pc1_scale,
+    yend = center[2] + rotation[2, 1] * pc1_scale,
+    PC = "PC1"
+  )
+
+  pc2_arrow <- data.frame(
+    x = center[1],
+    y = center[2],
+    xend = center[1] + rotation[1, 2] * pc2_scale,
+    yend = center[2] + rotation[2, 2] * pc2_scale,
+    PC = "PC2"
+  )
+
+  # Combine arrows
+  arrows_df <- rbind(pc1_arrow, pc2_arrow)
+
+  # Get column names for labeling
+  col_names <- colnames(data)
+  if(is.null(xlab)){xname=col_names[1]}
+  if(!is.null(xlab)){xname=xlab}
+  if(is.null(ylab)){yname=col_names[2]}
+  if(!is.null(ylab)){yname=ylab}
+  # Create ggplot
+  p <- ggplot(data, aes(x = .data[[col_names[1]]], y = .data[[col_names[2]]])) +
+    geom_point(color = "gray40", size = point_size, alpha = 0.7) +
+    geom_segment(data = arrows_df,
+                 aes(x = x, y = y, xend = xend, yend = yend, color = PC),
+                 arrow = arrow(length = unit(0.3, "cm"), type = "closed"),
+                 linewidth = 1.2) +
+    scale_color_manual(values = c("PC1" = "red", "PC2" = "blue"),
+                       labels = c(paste0("PC1 (", round(variance_explained[1], 1), "%)"),
+                                  paste0("PC2 (", round(variance_explained[2], 1), "%)"))) +
+    #coord_fixed(ratio = 1) +
+    labs(title = main,
+         x = xname,
+         y = yname,
+         color = "Principal\nComponent") +
+    theme_minimal() +
+    theme(
+      axis.text = element_text(size = axis_label_size),
+      axis.title = element_text(size = axis_label_size + 2, face = "bold"),
+      plot.title = element_text(size = axis_label_size + 4, face = "bold", hjust = 0.5),
+      legend.text = element_text(size = axis_label_size - 2),
+      legend.title = element_text(size = axis_label_size, face = "bold"),
+      panel.grid.minor = element_blank()
+    )
+  print(p)
+  # Return results
+  return(list(
+    plot = p,
+    pca_result = pca_result,
+    variance_explained = variance_explained
+  ))
+}
+
+
+
+
+
+
+

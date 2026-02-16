@@ -2,3 +2,4 @@
 
 export(lc.trans)
 export(pca.scree)
+export(plot_praxes)

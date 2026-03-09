@@ -1,6 +1,6 @@
 #' Wisconsin Breast Cancer Data set
 #'
-#' A dataset containing 30 measurements computed from digitized images of a fine need aspirate (FNA) of a breast mass.
+#' A dataset containing 30 measurements computed from digitized images of a fine needle aspirate (FNA) of a breast mass.
 #' The measurements describe various characteristics of the cell nuclei that are present in the image.  Each image is also labeled
 #' as being benign (B) or malginant (M) via the diagnosis variable.  The data set was obtained through the UCI data data base archives
 #' \insertCite{cancer_data}{msds}.

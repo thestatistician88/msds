@@ -5,7 +5,7 @@
 \alias{cancer}
 \title{Wisconsin Breast Cancer Data set}
 \format{
-A data frame with 569 observations on the following 10 characeristics each summarized by the mean, standard error, and "worst":
+A data frame with 569 observations on the following 10 characteristics each summarized by the mean, standard error, and "worst":
 \describe{
 \item{\code{diagnosis}}{diagnosis: Benign (B) , malignant (M)}
 \item{\code{radius}}{radius: distances from center to points on the perimeter}
@@ -21,14 +21,14 @@ A data frame with 569 observations on the following 10 characeristics each summa
 }
 }
 \source{
-\insertRef{cancer_data}{MSDS}
+\insertRef{cancer_data}{msds}
 \url{https://doi.org/10.24432/C5DW2B}
 }
 \usage{
 cancer
 }
 \description{
-A dataset containing 30 measurements computed from digitized images of a fine need aspirate (FNA) of a breast mass.
+A dataset containing 30 measurements computed from digitized images of a fine needle aspirate (FNA) of a breast mass.
 The measurements describe various characteristics of the cell nuclei that are present in the image.  Each image is also labeled
 as being benign (B) or malginant (M) via the diagnosis variable.  The data set was obtained through the UCI data data base archives
 \insertCite{cancer_data}{msds}.
@@ -36,6 +36,6 @@ as being benign (B) or malginant (M) via the diagnosis variable.  The data set w
 \details{
 The dataset includes 30 numerical aggregates obtained from imaging of 569 breast mass tissue samples. There are 10 well definied characteristics that are
 measured for each nuclei in the image.  Since multiple nuclei are present in each image the numeric values are aggreated by taking the mean, computing the standard error,
-or taking the worst measuremtn (max or min). \insertCite{cancer_data}{msds}.
+or taking the worst measurement (max or min). \insertCite{cancer_data}{msds}.
 }
 \keyword{datasets}

@@ -38,9 +38,9 @@ lc.trans<-function(y,C){
 #####################################################################################################
 #' Scree Plots Derived From PCA
 #'
-#' Produces scree plots from user provided eigenvalues or an object created by [stats::princomp] or [stats:prcomp].
+#' Produces scree plots from user provided eigenvalues or an object created by [stats::princomp] or [stats::prcomp].
 #'
-#' @param x An object containing a `sdev` component, such as that returned by [stats::princomp] or [stats:prcomp] .
+#' @param x An object containing a `sdev` component, such as that returned by [stats::princomp] or [stats::prcomp] .
 #' @param eig.vals Vector of eigenvalues from a PCA decomposition.  Alternative to `x`.
 #' @param ref Horizontal reference line for the cumulative proportion plot.
 #' @param label.size Text size for x and y axis labels.

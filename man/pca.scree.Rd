@@ -7,7 +7,7 @@
 pca.scree(x, eig.vals = NULL, ref = 0.8, label.size = 11)
 }
 \arguments{
-\item{x}{An object containing a \code{sdev} component, such as that returned by \link[stats:princomp]{stats::princomp} or \link{stats:prcomp} .}
+\item{x}{An object containing a \code{sdev} component, such as that returned by \link[stats:princomp]{stats::princomp} or \link[stats:prcomp]{stats::prcomp} .}
 
 \item{eig.vals}{Vector of eigenvalues from a PCA decomposition.  Alternative to \code{x}.}
 
@@ -19,7 +19,7 @@ pca.scree(x, eig.vals = NULL, ref = 0.8, label.size = 11)
 A 1x3 panel of scree plots using the eigenvalues, proportion of variance explained, and cumulative proportion of variance explained.
 }
 \description{
-Produces scree plots from user provided eigenvalues or an object created by \link[stats:princomp]{stats::princomp} or \link{stats:prcomp}.
+Produces scree plots from user provided eigenvalues or an object created by \link[stats:princomp]{stats::princomp} or \link[stats:prcomp]{stats::prcomp}.
 }
 \details{
 The user may specify eigenvalues for plotting rather than an object created by one of the common PCA functions. User should specify \code{x=NULL} when

@@ -19,6 +19,8 @@
 #' The dataset includes 6 productivity indicators (P1-P4B) to evaluate the performance of 48 Italian Economics
 #' faculties working at public universities in the 2009/2010 academic year.  This is a reduced data set found in \insertCite{ICR}{msds}  for educational purposes.
 #'
-#' @source \insertRef{ICR}{msds} \insertRef{economics_data}{MSDS}
+#' @source
+#' \insertRef{ICR}{msds}
+#' \insertRef{economics_data}{msds}
 #' \url{https://search.r-project.org/CRAN/refmans/datasetsICR/html/Economics.html}
 "economics_reduced"
